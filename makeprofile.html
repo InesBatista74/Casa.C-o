@@ -9,11 +9,16 @@
     <!-- Include jQuery for dynamic filtering -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
+        /* Set the background color for the entire page */
+        body {
+            background-color: lightblue;
+        }
+    
         /* Custom styling for dropdown section */
         #breedDropdownContainer {
             position: relative;
         }
-
+    
         #breedOptionsDropdown {
             position: absolute;
             top: 100%;
@@ -27,16 +32,17 @@
             z-index: 1000;
             display: none;
         }
-
+    
         #breedOptionsDropdown div {
             padding: 10px;
             cursor: pointer;
         }
-
+    
         #breedOptionsDropdown div:hover {
             background-color: #f8f9fa;
         }
     </style>
+    
 </head>
 <body>
     <div class="container mt-5">
