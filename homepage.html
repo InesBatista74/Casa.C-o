@@ -62,13 +62,37 @@
   </nav>
 
   <!-- Hero Section -->
-  <section class="hero-section">
-    <div>
-      <h1>Welcome to Dog Care</h1>
-      <p>Your one-stop solution for dog health and happiness!</p>
-      <a href="#services" class="btn btn-primary btn-lg">Get Started</a>
-    </div>
-  </section>
+<section class="hero-section">
+  <div class="hero-overlay">
+    <h1>Bem vindo à Casa do Cão</h1>
+    <p>A sua solução completa para a saúde e felicidade do seu cão!</p>
+    <a href="#services" class="btn btn-primary btn-lg">Get Started</a>
+  </div>
+</section>
+
+<!-- Custom Styles for Hero Section -->
+<style>
+  .hero-section {
+    background-image: url('dawglick.jpg'); /* Replace with your image URL */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    height: 50vh;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .hero-overlay {
+    background-color: rgba(0, 0, 0, 0.5); /* Adds a semi-transparent overlay */
+    padding: 20px;
+    border-radius: 10px;
+  }
+</style>
+
 
   <!-- Main Content Section -->
   <div class="container py-5" id="services">
@@ -141,7 +165,7 @@
   <!-- Footer -->
   <footer class="bg-light py-3">
     <div class="container text-center">
-      <p>&copy; 2024 Dog Care. All Rights Reserved.</p>
+      <p>&copy; 2024 Casa do Cão. All Rights Reserved.</p>
     </div>
   </footer>
 
