@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dog Care Homepage</title>
+  <title>Casa do Cão - Homepage</title>
 
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -48,26 +48,22 @@
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-        <a class="navbar-brand" href="homepage.html">
-            <img src="logo.png" alt="Logo" id="logo" class="img-fluid" style="max-width: 50px; height: auto;">
-        </a>
-
-        <a class="nav-link" href="notifications.html" data-bs-toggle="tooltip" title="Notifications">
-            <i class="fas fa-bell"></i>
-        </a>
-
-        <div class="dropdown ms-auto">
-            <button class="btn btn-light dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fas fa-user" style="font-size: 30px;"></i>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                <li><a class="dropdown-item" href="#">Profile 1</a></li>
-                <li><a class="dropdown-item" href="#">Profile 2</a></li>
-                <li><a class="dropdown-item" href="#">Profile 3</a></li>
-                <li><a class="dropdown-item" href="create-profile.html">Create New Profile</a></li>
-                <li><a class="dropdown-item" href="edit-profile.html">Edit Profile</a></li>
-            </ul>
-        </div>
+      <a class="navbar-brand" href="homepage.html">
+        <img src="logo.png" alt="Logo" id="logo" class="img-fluid" style="max-width: 50px; height: auto;">
+      </a>
+      <a class="nav-link" href="notifications.html" data-bs-toggle="tooltip" title="Notificações">
+        <i class="fas fa-bell"></i>
+      </a>
+      <div class="dropdown ms-auto">
+        <button class="btn btn-light dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="fas fa-user" style="font-size: 30px;"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+          <li><a class="dropdown-item" href="#">Ver Perfil</a></li>
+          <li><a class="dropdown-item" href="create-profile.html">Criar Perfil</a></li>
+          <li><a class="dropdown-item" href="edit-profile.html">Editar Perfil</a></li>
+        </ul>
+      </div>
     </div>
   </nav>
 
@@ -75,74 +71,72 @@
   <section class="hero-section">
     <div class="hero-overlay">
       <h1>Bem-vindo à Casa do Cão</h1>
-      <p>A sua solução completa para a saúde e felicidade do seu cão!</p>
-      <a href="#services" class="btn btn-primary btn-lg">Get Started</a>
+      <p>A sua plataforma integrada para o cuidado completo dos seus cães.</p>
+      <a href="#services" class="btn btn-primary btn-lg">Descubra os Serviços</a>
     </div>
   </section>
-  </div>
 
   <!-- Main Content Section -->
   <div class="container py-5" id="services">
-    <h2 class="text-center mb-4">Our Services</h2>
+    <h2 class="text-center mb-4">Os Nossos Serviços</h2>
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
 
-      <!-- Service 1: Dog Registration -->
+      <!-- Serviço 1: Registo Completo -->
       <div class="col">
         <div class="card text-center service-card">
           <div class="card-body">
             <i class="fas fa-paw card-icon"></i>
-            <h5 class="card-title">Dog Registration</h5>
-            <p class="card-text">Register your dog’s information, including vaccination records and more!</p>
-            <!-- Updated link to makeprofile.html -->
-            <a href="makeprofile.html" class="btn btn-outline-primary">Register Now</a>
+            <h5 class="card-title">Registo Completo</h5>
+            <p class="card-text">Registe todos os dados do seu cão, incluindo vacinação e informações essenciais.</p>
+            <a href="makeprofile.html" class="btn btn-outline-primary">Registar Agora</a>
           </div>
         </div>
       </div>
 
-      <!-- Service 2: Vet Appointments -->
+      <!-- Serviço 2: Consultas Veterinárias -->
       <div class="col">
         <div class="card text-center service-card">
           <div class="card-body">
             <i class="fas fa-stethoscope card-icon"></i>
-            <h5 class="card-title">Book Vet Appointments</h5>
-            <p class="card-text">Easily search and book appointments with trusted veterinarians.</p>
-            <a href="vet.html" class="btn btn-outline-primary">Book Now</a>
+            <h5 class="card-title">Consultas Veterinárias</h5>
+            <p class="card-text">Pesquise e agende consultas com clínicas veterinárias parceiras.</p>
+            <a href="vet.html" class="btn btn-outline-primary">Agendar Consulta</a>
           </div>
         </div>
       </div>
 
-      <!-- Service 3: Exercise Monitoring -->
+      <!-- Serviço 3: Monitorização Física -->
       <div class="col">
         <div class="card text-center service-card">
           <div class="card-body">
             <i class="fas fa-running card-icon"></i>
-            <h5 class="card-title">Monitor Exercise</h5>
-            <p class="card-text">Track and receive recommendations for your dog’s exercise routine.</p>
-            <a href="exercise.html" class="btn btn-outline-primary">Track Routine</a>
+            <h5 class="card-title">Monitorização Física</h5>
+            <p class="card-text">Registe dados e receba recomendações para o exercício do seu cão.</p>
+            <a href="exercise.html" class="btn btn-outline-primary">Ver Recomendações</a>
           </div>
         </div>
       </div>
 
-      <!-- Service 4: Dog Walking Services -->
+      <!-- Serviço 4: Dog Walking -->
       <div class="col">
         <div class="card text-center service-card">
           <div class="card-body">
             <i class="fas fa-dog card-icon"></i>
-            <h5 class="card-title">Dog Walking Services</h5>
-            <p class="card-text">Book professional dog walkers for your furry friend.</p>
-            <a href="dogwalking.html" class="btn btn-outline-primary">Book Walk</a>
+            <h5 class="card-title">Serviços de Dog Walking</h5>
+            <p class="card-text">Reserve passeios com profissionais qualificados para o seu cão.</p>
+            <a href="dogwalking.html" class="btn btn-outline-primary">Reservar Passeio</a>
           </div>
         </div>
       </div>
 
-      <!-- Service 5: E-Commerce Shop -->
+      <!-- Serviço 5: Comércio Eletrónico -->
       <div class="col">
         <div class="card text-center service-card">
           <div class="card-body">
             <i class="fas fa-shopping-cart card-icon"></i>
-            <h5 class="card-title">Shop for Dog Products</h5>
-            <p class="card-text">Browse and buy dog food, accessories, and more.</p>
-            <a href="shop.html" class="btn btn-outline-primary">Shop Now</a>
+            <h5 class="card-title">Comércio Eletrónico</h5>
+            <p class="card-text">Compre comida, acessórios e produtos para o seu cão.</p>
+            <a href="shop.html" class="btn btn-outline-primary">Comprar Agora</a>
           </div>
         </div>
       </div>
@@ -153,28 +147,12 @@
   <!-- Footer -->
   <footer class="bg-light py-3">
     <div class="container text-center">
-      <p>&copy; 2024 Casa do Cão. All Rights Reserved.</p>
+      <p>&copy; 2024 Casa do Cão. Todos os direitos reservados.</p>
     </div>
   </footer>
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
-</body>
-</html>
-
-  <script>
-    window.onload = function() {
-        const userEmail = localStorage.getItem('userEmail');
-        if (userEmail) {
-            const greeting = `Bem-vindo, ${userEmail}!`;
-            const heroSection = document.querySelector('.hero-overlay');
-            const greetingElement = document.createElement('h3');
-            greetingElement.textContent = greeting;
-            heroSection.appendChild(greetingElement);
-        }
-    };
-  </script>
 
 </body>
 </html>

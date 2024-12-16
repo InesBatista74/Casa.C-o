@@ -6,21 +6,31 @@
     <title>Notifications</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 
-  <!-- Font Awesome -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <style>
         body {
             background-color: #f8f9fa;
         }
         .notification-card {
             margin-bottom: 20px;
+            position: relative;
         }
         .navbar {
             margin-bottom: 20px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            color: #dc3545;
+            font-size: 20px;
+        }
+        .delete-btn:hover {
+            color: #bb2d3b;
         }
     </style>
 </head>
@@ -54,26 +64,45 @@
     <div class="container mt-4">
         <h1 class="mb-4 text-center">Notifications</h1>
 
-        <div class="notification-card card">
-            <div class="card-body">
-                <h5 class="card-title">Appointment Update</h5>
-                <p class="card-text">Your upcoming vet appointment has been rescheduled to December 18, 2024, at 2:00 PM.</p>
-            </div>
-        </div>
-
-        <div class="notification-card card">
-            <div class="card-body">
-                <h5 class="card-title">Shop Supply Update</h5>
-                <p class="card-text">New dog toys and premium food have been added to the shop. Check them out <a href="shop.html">here</a>.</p>
-            </div>
-        </div>
-
-        <div class="notification-card card">
-            <div class="card-body">
-                <h5 class="card-title">Health Update</h5>
-                <p class="card-text">Your dog's weight dropped to 23 kg this week! Great progress on the weight goal.</p>
-            </div>
+        <div id="notificationList">
+            <!-- Notifications will be dynamically loaded here -->
         </div>
     </div>
+
+    <script>
+        // Load notifications from localStorage and display them
+        const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+        const notificationList = document.getElementById('notificationList');
+
+        if (notifications.length === 0) {
+            notificationList.innerHTML = '<p>No notifications available.</p>';
+        } else {
+            notifications.forEach(function(notification, index) {
+                const notificationCard = document.createElement('div');
+                notificationCard.classList.add('notification-card', 'card');
+                notificationCard.innerHTML = `
+                    <div class="card-body">
+                        <h5 class="card-title">${notification.title}</h5>
+                        <p class="card-text">${notification.message}</p>
+                    </div>
+                    <span class="delete-btn" onclick="deleteNotification(${index})">
+                        <i class="fas fa-trash-alt"></i>
+                    </span>
+                `;
+                notificationList.appendChild(notificationCard);
+            });
+        }
+
+        // Function to delete a notification
+        function deleteNotification(index) {
+            // Remove the notification from localStorage
+            const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+            notifications.splice(index, 1); // Remove the notification by index
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+
+            // Reload the notifications list to reflect the change
+            location.reload();
+        }
+    </script>
 </body>
 </html>

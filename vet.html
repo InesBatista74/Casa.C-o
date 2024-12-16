@@ -6,12 +6,10 @@
     <title>Book Vet Appointment</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 
-  <!-- Font Awesome -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/knockout@3.5.1/build/knockout.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.5.1/knockout-min.js"></script>
 </head>
 <body>
     <!-- Navbar -->
@@ -40,98 +38,93 @@
         </div>
     </nav>
 
-    <div id="bookingApp" class="container mt-4">
+    <div class="container mt-4">
         <h1 class="mb-4">Book a Vet Appointment</h1>
-        
-        <!-- Step 1: Choose Partner Clinic -->
-        <div data-bind="visible: currentStep() === 1" class="mb-4">
-            <h2>Step 1: Choose a Partner Clinic</h2>
-            <div class="mb-3">
-                <select class="form-select" data-bind="options: clinics, value: selectedClinic, optionsCaption: 'Select a clinic'"></select>
-            </div>
-            <button class="btn btn-primary" data-bind="click: nextStep, enable: selectedClinic">Next</button>
-        </div>
 
-        <!-- Step 2: Choose Appointment Type -->
-        <div data-bind="visible: currentStep() === 2" class="mb-4">
-            <h2>Step 2: Choose Appointment Type</h2>
-            <div class="mb-3">
-                <select class="form-select" data-bind="options: appointmentTypes, value: selectedAppointmentType, optionsCaption: 'Select an appointment type'"></select>
+        <form id="appointmentForm">
+            <div class="mb-4">
+                <label for="clinicSelect" class="form-label">Choose a Clinic</label>
+                <select id="clinicSelect" class="form-select">
+                    <option selected disabled>Select a clinic</option>
+                    <option>Pawsitive Care Veterinary</option>
+                    <option>TailWaggers Veterinary Hospital</option>
+                    <option>Fur Haven Animal Clinic</option>
+                    <option>Healthy Paws Vet Services</option>
+                    <option>Golden Leash Animal Care</option>
+                </select>
             </div>
-            <button class="btn btn-secondary me-2" data-bind="click: prevStep">Back</button>
-            <button class="btn btn-primary" data-bind="click: nextStep, enable: selectedAppointmentType">Next</button>
-        </div>
 
-        <!-- Step 3: Choose Date -->
-        <div data-bind="visible: currentStep() === 3" class="mb-4">
-            <h2>Step 3: Choose an Available Date</h2>
-            <div class="mb-3" data-bind="foreach: availableDates">
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="appointmentDate" data-bind="value: $data, checked: selectedDate">
-                    <label class="form-check-label" data-bind="text: $data"></label>
-                </div>
+            <div class="mb-4">
+                <label for="appointmentTypeSelect" class="form-label">Choose Appointment Type</label>
+                <select id="appointmentTypeSelect" class="form-select">
+                    <option selected disabled>Select an appointment type</option>
+                    <option>Annual Health Check</option>
+                    <option>Vaccination Booster</option>
+                    <option>Dental Cleaning</option>
+                    <option>Skin Allergy Consultation</option>
+                    <option>Emergency Consultation</option>
+                </select>
             </div>
-            <button class="btn btn-secondary me-2" data-bind="click: prevStep">Back</button>
-            <button class="btn btn-success" data-bind="click: confirmAppointment, enable: selectedDate">Confirm Appointment</button>
-        </div>
 
-        <!-- Confirmation Message -->
-        <div data-bind="visible: currentStep() === 4" class="mb-4">
+            <div class="mb-4">
+                <label for="dateTimeSelect" class="form-label">Choose Date and Time</label>
+                <select id="dateTimeSelect" class="form-select">
+                    <option selected disabled>Select a date and time</option>
+                    <option>2024-12-20 10:00 AM</option>
+                    <option>2024-12-21 02:00 PM</option>
+                    <option>2024-12-22 09:00 AM</option>
+                    <option>2024-12-23 01:00 PM</option>
+                    <option>2024-12-24 11:00 AM</option>
+                </select>
+            </div>
+
+            <button type="button" class="btn btn-success" id="confirmAppointment">Confirm Appointment</button>
+        </form>
+
+        <div id="confirmationMessage" class="alert alert-success mt-4 d-none">
             <h2>Appointment Confirmed!</h2>
-            <p>Thank you for booking your appointment.</p>
-            <p><strong>Clinic:</strong> <span data-bind="text: selectedClinic"></span></p>
-            <p><strong>Type:</strong> <span data-bind="text: selectedAppointmentType"></span></p>
-            <p><strong>Date:</strong> <span data-bind="text: selectedDate"></span></p>
-            <button class="btn btn-primary" data-bind="click: resetBooking">Book Another Appointment</button>
+            <p><strong>Clinic:</strong> <span id="confirmedClinic"></span></p>
+            <p><strong>Type:</strong> <span id="confirmedType"></span></p>
+            <p><strong>Date & Time:</strong> <span id="confirmedDateTime"></span></p>
+            <button class="btn btn-primary" id="resetForm">Book Another Appointment</button>
         </div>
     </div>
 
     <script>
-        function BookingViewModel() {
-            var self = this;
+        document.getElementById('confirmAppointment').addEventListener('click', function() {
+            const clinic = document.getElementById('clinicSelect').value;
+            const type = document.getElementById('appointmentTypeSelect').value;
+            const dateTime = document.getElementById('dateTimeSelect').value;
 
-            // Step management
-            self.currentStep = ko.observable(1);
+            if (clinic && type && dateTime) {
+                // Save appointment details to localStorage for notifications
+                const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+                notifications.push({
+                    title: 'Appointment Confirmed',
+                    message: `Your appointment at ${clinic} for a ${type} on ${dateTime} has been confirmed.`
+                });
+                localStorage.setItem('notifications', JSON.stringify(notifications));
 
-            // Data for steps
-            self.clinics = ko.observableArray(["PetCare Center", "Happy Tails Clinic", "VetWell Clinic"]);
-            self.appointmentTypes = ko.observableArray(["Vaccination", "Normal Check-up", "Urgent Consultation"]);
-            self.availableDates = ko.observableArray(["2024-12-20", "2024-12-21", "2024-12-22"]);
+                // Show confirmation message
+                document.getElementById('appointmentForm').classList.add('d-none');
+                const confirmationMessage = document.getElementById('confirmationMessage');
+                confirmationMessage.classList.remove('d-none');
 
-            // Selected values
-            self.selectedClinic = ko.observable();
-            self.selectedAppointmentType = ko.observable();
-            self.selectedDate = ko.observable();
+                document.getElementById('confirmedClinic').textContent = clinic;
+                document.getElementById('confirmedType').textContent = type;
+                document.getElementById('confirmedDateTime').textContent = dateTime;
+            } else {
+                alert('Please complete all fields before confirming.');
+            }
+        });
 
-            // Navigation functions
-            self.nextStep = function () {
-                if (self.currentStep() < 4) {
-                    self.currentStep(self.currentStep() + 1);
-                }
-            };
-
-            self.prevStep = function () {
-                if (self.currentStep() > 1) {
-                    self.currentStep(self.currentStep() - 1);
-                }
-            };
-
-            // Confirm appointment
-            self.confirmAppointment = function () {
-                self.currentStep(4);
-            };
-
-            // Reset booking
-            self.resetBooking = function () {
-                self.selectedClinic(null);
-                self.selectedAppointmentType(null);
-                self.selectedDate(null);
-                self.currentStep(1);
-            };
-        }
-
-        // Apply Knockout bindings
-        ko.applyBindings(new BookingViewModel());
+        document.getElementById('resetForm').addEventListener('click', function() {
+            document.getElementById('appointmentForm').classList.remove('d-none');
+            document.getElementById('confirmationMessage').classList.add('d-none');
+            document.getElementById('clinicSelect').value = '';
+            document.getElementById('appointmentTypeSelect').value = '';
+            document.getElementById('dateTimeSelect').value = '';
+        });
     </script>
 </body>
 </html>
