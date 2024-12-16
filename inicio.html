@@ -139,12 +139,25 @@
                     <input type="password" id="password" name="password" placeholder="Digite sua senha" required>
                 </div>
 
-                <button type="button" onclick="window.location.href='homepage.html'">Entrar</button>
-
+                <button type="button" onclick="login()">Entrar</button>
             </form>
         </div>
         <div class="register">Não tens conta? <a href="registo.html">Regista-te!</a></div>
         <div class="footer">&copy; 2024 Casa do Cão. Todos os direitos reservados.</div>
     </div>
+
+    <script>
+        function login() {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            // Save the email in localStorage (avoid storing passwords in real use)
+            localStorage.setItem('userEmail', email);
+            localStorage.setItem('userPassword', password);  // Store only the email in practice
+
+            // Redirect to homepage
+            window.location.href = 'homepage.html';
+        }
+    </script>
 </body>
 </html>
