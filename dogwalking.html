@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Professional Dog Walker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/knockout@3.5.1/build/knockout.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css" />
+    <style>
+        #map {
+            height: 300px;
+            width: 100%;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="homepage.html">
+                <img src="logo.png" alt="Logo" id="logo" class="img-fluid" style="max-width: 50px; height: auto;">
+            </a>
+
+            <a class="nav-link" href="notifications.html" data-bs-toggle="tooltip" title="Notifications">
+                <i class="fas fa-bell"></i>
+            </a>
+
+            <div class="dropdown ms-auto">
+                <button class="btn btn-light dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-user" style="font-size: 30px;"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                    <li><a class="dropdown-item" href="#">Profile 1</a></li>
+                    <li><a class="dropdown-item" href="#">Profile 2</a></li>
+                    <li><a class="dropdown-item" href="#">Profile 3</a></li>
+                    <li><a class="dropdown-item" href="create-profile.html">Create New Profile</a></li>
+                    <li><a class="dropdown-item" href="edit-profile.html">Edit Profile</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div id="dogWalkerApp" class="container mt-4">
+        <h1 class="mb-4">Book a Professional Dog Walker</h1>
+
+        <!-- Step 1: Choose Dog Walker -->
+        <div data-bind="visible: currentStep() === 1" class="mb-4">
+            <h2>Step 1: Choose a Dog Walker</h2>
+            <div class="list-group" data-bind="foreach: dogWalkers">
+                <label class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>
+                        <span data-bind="text: name"></span> - 
+                        <span data-bind="text: availability"></span>
+                    </span>
+                    <input class="form-check-input" type="radio" name="dogWalker" data-bind="value: $data, checked: selectedDogWalker">
+                </label>
+            </div>
+            <button class="btn btn-primary mt-3" data-bind="click: nextStep, enable: selectedDogWalker">Next</button>
+        </div>
+
+        <!-- Step 2: Choose Date -->
+        <div data-bind="visible: currentStep() === 2" class="mb-4">
+            <h2>Step 2: Choose a Date</h2>
+            <div class="mb-3" data-bind="foreach: availableDates">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="appointmentDate" data-bind="value: $data, checked: selectedDate">
+                    <label class="form-check-label" data-bind="text: $data"></label>
+                </div>
+            </div>
+            <button class="btn btn-secondary me-2" data-bind="click: prevStep">Back</button>
+            <button class="btn btn-primary" data-bind="click: nextStep, enable: selectedDate">Next</button>
+        </div>
+
+        <!-- Step 3: Confirm Booking -->
+        <div data-bind="visible: currentStep() === 3" class="mb-4">
+            <h2>Booking Confirmed!</h2>
+            <p>Thank you for booking a dog walker.</p>
+            <p><strong>Walker:</strong> <span data-bind="text: selectedDogWalker() ? selectedDogWalker().name : ''"></span></p>
+            <p><strong>Date:</strong> <span data-bind="text: selectedDate"></span></p>
+            <h3>Walker's Current Location</h3>
+            <div id="map"></div>
+            <button class="btn btn-primary mt-3" data-bind="click: resetBooking">Book Another Walker</button>
+        </div>
+    </div>
+
+    <script>
+        function DogWalkerViewModel() {
+            var self = this;
+
+            // Step management
+            self.currentStep = ko.observable(1);
+
+            // Dog walkers and their availability
+            self.dogWalkers = ko.observableArray([
+                { name: "John Doe", availability: "Available", location: [40.7128, -74.0060] },
+                { name: "Jane Smith", availability: "Unavailable", location: [34.0522, -118.2437] },
+                { name: "Mike Johnson", availability: "Available", location: [37.7749, -122.4194] }
+            ]);
+
+            // Dates available for booking
+            self.availableDates = ko.observableArray(["2024-12-20", "2024-12-21", "2024-12-22"]);
+
+            // Selected values
+            self.selectedDogWalker = ko.observable();
+            self.selectedDate = ko.observable();
+
+            // Navigation functions
+            self.nextStep = function () {
+                if (self.currentStep() < 3) {
+                    self.currentStep(self.currentStep() + 1);
+                    if (self.currentStep() === 3) {
+                        self.showMap();
+                    }
+                }
+            };
+
+            self.prevStep = function () {
+                if (self.currentStep() > 1) {
+                    self.currentStep(self.currentStep() - 1);
+                }
+            };
+
+            // Reset booking
+            self.resetBooking = function () {
+                self.selectedDogWalker(null);
+                self.selectedDate(null);
+                self.currentStep(1);
+            };
+
+            // Map display function
+            self.showMap = function () {
+                var walker = self.selectedDogWalker();
+                if (walker && walker.location) {
+                    var map = L.map('map').setView(walker.location, 13);
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        maxZoom: 19,
+                        attribution: '© OpenStreetMap contributors'
+                    }).addTo(map);
+
+                    L.marker(walker.location).addTo(map)
+                        .bindPopup(walker.name + " is here.")
+                        .openPopup();
+                }
+            };
+        }
+
+        // Apply Knockout bindings
+        ko.applyBindings(new DogWalkerViewModel());
+    </script>
+</body>
+</html>
