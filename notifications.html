@@ -16,6 +16,7 @@
         .notification-card {
             margin-bottom: 20px;
             position: relative;
+            cursor: pointer;
         }
         .navbar {
             margin-bottom: 20px;
@@ -69,10 +70,45 @@
         </div>
     </div>
 
+    <!-- Modal for Appointment Details -->
+    <div class="modal fade" id="appointmentModal" tabindex="-1" aria-labelledby="appointmentModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="appointmentModalLabel">Appointment Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Clinic:</strong> <span id="modalClinic"></span></p>
+                    <p><strong>Type:</strong> <span id="modalType"></span></p>
+                    <p><strong>Date & Time:</strong> <span id="modalDateTime"></span></p>
+                    <p><strong>Veterinarian:</strong> <span id="modalVeterinarian"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Load notifications from localStorage and display them
         const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
         const notificationList = document.getElementById('notificationList');
+
+        // List of random veterinarian names
+        const veterinarianNames = [
+            "Dr. Emily Carter",
+            "Dr. James Wright",
+            "Dr. Olivia Brown",
+            "Dr. Liam Johnson",
+            "Dr. Ava Martinez",
+            "Dr. Noah Anderson",
+            "Dr. Mia Lee",
+            "Dr. William Wilson",
+            "Dr. Sophia Hernandez",
+            "Dr. Ethan Thompson"
+        ];
 
         if (notifications.length === 0) {
             notificationList.innerHTML = '<p>No notifications available.</p>';
@@ -80,6 +116,9 @@
             notifications.forEach(function(notification, index) {
                 const notificationCard = document.createElement('div');
                 notificationCard.classList.add('notification-card', 'card');
+                notificationCard.setAttribute('data-bs-toggle', 'modal');
+                notificationCard.setAttribute('data-bs-target', '#appointmentModal');
+                notificationCard.dataset.index = index; // Attach index for easy retrieval
                 notificationCard.innerHTML = `
                     <div class="card-body">
                         <h5 class="card-title">${notification.title}</h5>
@@ -103,6 +142,37 @@
             // Reload the notifications list to reflect the change
             location.reload();
         }
+
+        // Show appointment details in the modal
+        const modalClinic = document.getElementById('modalClinic');
+        const modalType = document.getElementById('modalType');
+        const modalDateTime = document.getElementById('modalDateTime');
+        const modalVeterinarian = document.getElementById('modalVeterinarian');
+
+        notificationList.addEventListener('click', function (event) {
+            const notificationCard = event.target.closest('.notification-card');
+            if (notificationCard) {
+                const index = notificationCard.dataset.index;
+                const notification = notifications[index];
+
+                if (notification) {
+                    // Extract details from the notification message
+                    const [_, clinic, type, dateTime] = /at (.*?) for a (.*?) on (.*)/.exec(notification.message);
+
+                    // Select a random veterinarian's name
+                    const randomVet = veterinarianNames[Math.floor(Math.random() * veterinarianNames.length)];
+
+                    // Populate the modal
+                    modalClinic.textContent = clinic;
+                    modalType.textContent = type;
+                    modalDateTime.textContent = dateTime;
+                    modalVeterinarian.textContent = randomVet;
+                }
+            }
+        });
+        
+
+        
     </script>
 </body>
 </html>
