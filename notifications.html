@@ -31,28 +31,33 @@
         .delete-btn:hover {
             color: #bb2d3b;
         }
+        .navbar .dropdown img {
+            border-radius: 50%;
+            object-fit: cover;
+        }
     </style>
 </head>
 <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-          <a class="navbar-brand" href="homepage.html">
-            <img src="logo.png" alt="Logo" id="logo" class="img-fluid" style="max-width: 50px; height: auto;">
-          </a>
-          <a class="nav-link" href="notifications.html" data-bs-toggle="tooltip" title="Notificações">
-            <i class="fas fa-bell"></i>
-          </a>
-          <div class="dropdown ms-auto">
-            <button class="btn btn-light dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="fas fa-user" style="font-size: 30px;"></i>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-              <li><a class="dropdown-item" href="viewprofile.html">Ver Perfil</a></li>
-            </ul>
-          </div>
+            <a class="navbar-brand" href="homepage.html">
+                <img src="logo.png" alt="Logo" id="logo" class="img-fluid" style="max-width: 50px; height: auto;">
+            </a>
+            <a class="nav-link" href="notifications.html" data-bs-toggle="tooltip" title="Notificações">
+                <i class="fas fa-bell"></i>
+            </a>
+            <div class="dropdown ms-auto">
+                <button class="btn btn-light dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <!-- Profile picture -->
+                    <img id="dropdownProfilePicture" src="default-profile.jpg" alt="Foto de Perfil" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;">
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                    <li><a class="dropdown-item" href="viewprofile.html">Ver Perfil</a></li>
+                </ul>
+            </div>
         </div>
-      </nav>
+    </nav>
 
     <div class="container mt-4">
         <h1 class="mb-4 text-center">Notifications</h1>
@@ -62,6 +67,14 @@
     </div>
 
     <script>
+        // Update profile picture based on localStorage data
+        const profilePicture = localStorage.getItem('profilePicture');
+        const dropdownProfilePicture = document.getElementById('dropdownProfilePicture');
+
+        if (profilePicture) {
+            dropdownProfilePicture.src = profilePicture;
+        }
+
         // Load notifications from localStorage and display them
         const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
         const notificationList = document.getElementById('notificationList');
