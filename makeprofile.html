@@ -26,26 +26,23 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="homepage.html">
-                <img src="logo.png" alt="Logo" id="logo" class="img-fluid" style="max-width: 50px; height: auto;">
-            </a>
-            <a class="nav-link" href="notifications.html" data-bs-toggle="tooltip" title="Notifications">
-                <i class="fas fa-bell"></i>
-            </a>
-            <div class="dropdown ms-auto">
-                <button class="btn btn-light dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fas fa-user" style="font-size: 30px;"></i>
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                    <li><a class="dropdown-item" href="#">Profile 1</a></li>
-                    <li><a class="dropdown-item" href="#">Profile 2</a></li>
-                    <li><a class="dropdown-item" href="#">Profile 3</a></li>
-                    <li><a class="dropdown-item" href="create-profile.html">Create New Profile</a></li>
-                    <li><a class="dropdown-item" href="edit-profile.html">Edit Profile</a></li>
-                </ul>
-            </div>
+          <a class="navbar-brand" href="homepage.html">
+            <img src="logo.png" alt="Logo" id="logo" class="img-fluid" style="max-width: 50px; height: auto;">
+          </a>
+          <a class="nav-link" href="notifications.html" data-bs-toggle="tooltip" title="Notificações">
+            <i class="fas fa-bell"></i>
+          </a>
+          <div class="dropdown ms-auto">
+            <button class="btn btn-light dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fas fa-user" style="font-size: 30px;"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+              <li><a class="dropdown-item" href="viewprofile.html">Ver Perfil</a></li>
+              <li><a class="dropdown-item" href="editprofile.html">Editar Perfil</a></li>
+            </ul>
+          </div>
         </div>
-    </nav>
+      </nav>
 
     <!-- Form Content -->
     <div class="container mt-5">
@@ -160,8 +157,38 @@
         }
     
         function confirmDeleteProfile(index) {
-            profileToDeleteIndex = index;
-        }
+    profileToDeleteIndex = index;
+}
+
+document.getElementById('confirmDeleteButton').addEventListener('click', () => {
+    if (profileToDeleteIndex !== null) {
+        const deletedProfile = dogProfiles[profileToDeleteIndex].name;
+        
+        // Remove the profile from the array
+        dogProfiles.splice(profileToDeleteIndex, 1);
+        
+        // Create a notification object
+        const deletionNotification = {
+            title: "Perfil Eliminado",
+            message: `You deleted the profile of ${deletedProfile}.`
+        };
+        
+        // Add the notification to the notifications array
+        notifications.push(deletionNotification);
+        
+        // Update localStorage
+        localStorage.setItem('dogProfiles', JSON.stringify(dogProfiles));
+        localStorage.setItem('notifications', JSON.stringify(notifications));
+        
+        // Reload the profiles display
+        loadDogProfiles();
+        
+        // Reset the index and close the modal
+        profileToDeleteIndex = null;
+        bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
+    }
+});
+
     
         document.getElementById('confirmDeleteButton').addEventListener('click', () => {
             if (profileToDeleteIndex !== null) {

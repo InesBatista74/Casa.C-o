@@ -147,17 +147,23 @@
     </div>
 
     <script>
-        function login() {
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault();
 
-            // Save the email in localStorage (avoid storing passwords in real use)
-            localStorage.setItem('userEmail', email);
-            localStorage.setItem('userPassword', password);  // Store only the email in practice
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
 
-            // Redirect to homepage
-            window.location.href = 'homepage.html';
-        }
+            // Validate credentials
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(user => user.email === email && user.password === password);
+
+            if (user) {
+                alert("Login bem-sucedido!");
+                window.location.href = 'homepage.html';
+            } else {
+                alert("Email ou senha inválidos!");
+            }
+        });
     </script>
 </body>
 </html>
