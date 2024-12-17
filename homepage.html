@@ -41,6 +41,13 @@
     .service-card {
       cursor: pointer;
     }
+
+    .profile-picture-navbar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
   </style>
 </head>
 <body>
@@ -49,14 +56,14 @@
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
       <a class="navbar-brand" href="homepage.html">
-        <img src="logo.png" alt="Logo" id="logo" class="img-fluid" style="max-width: 50px; height: auto;">
+        <img src="logo.png" alt="Logo" class="img-fluid" style="max-width: 50px; height: auto;">
       </a>
       <a class="nav-link" href="notifications.html" data-bs-toggle="tooltip" title="Notificações">
         <i class="fas fa-bell"></i>
       </a>
       <div class="dropdown ms-auto">
         <button class="btn btn-light dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-          <i class="fas fa-user" style="font-size: 30px;"></i>
+          <img id="dropdownProfilePicture" src="default-profile.jpg" alt="Foto de Perfil" class="profile-picture-navbar">
         </button>
         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
           <li><a class="dropdown-item" href="viewprofile.html">Ver Perfil</a></li>
@@ -68,7 +75,7 @@
   <!-- Hero Section -->
   <section class="hero-section">
     <div class="hero-overlay">
-      <h1 id="welcome-message">Bem-vindo à Casa do Cão</h1>
+      <h1>Bem-vindo, <span id="welcomeName">Usuário</span>!</h1>
       <p>A sua plataforma integrada para o cuidado completo dos seus cães.</p>
       <a href="#services" class="btn btn-primary btn-lg">Descubra os Serviços</a>
     </div>
@@ -154,11 +161,14 @@
 
   <!-- Custom Script -->
   <script>
-    // Personalize welcome message based on logged-in user
-    const userEmail = localStorage.getItem('userEmail');
-    if (userEmail) {
-      document.getElementById('welcome-message').textContent = `Bem-vindo(a) de volta, ${userEmail}!`;
-    }
+    // Load user data from localStorage
+    window.onload = function () {
+      const userName = localStorage.getItem('userName') || 'Usuário';
+      const profilePicture = localStorage.getItem('profilePicture') || 'default-profile.jpg';
+
+      document.getElementById('welcomeName').textContent = userName;
+      document.getElementById('dropdownProfilePicture').src = profilePicture;
+    };
   </script>
 </body>
 </html>
