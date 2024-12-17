@@ -185,7 +185,7 @@
             profileToEditIndex = index;
         }
     
-        document.getElementById('dogDetailsForm').addEventListener('submit', function (e) {
+document.getElementById('dogDetailsForm').addEventListener('submit', function (e) {
     e.preventDefault();
 
     const name = document.getElementById('dogName').value.trim();
@@ -194,7 +194,8 @@
     const gender = document.getElementById('dogGender').value;
     const pictureInput = document.getElementById('dogPicture');
 
-    let notificationMessage = '';
+    var notificationMessage = '';
+    console.log(profileToEditIndex);
 
     if (profileToEditIndex !== null) {
         // Editing an existing profile
@@ -230,6 +231,8 @@
             };
             reader.readAsDataURL(pictureInput.files[0]);
         } else {
+            console.log(changes);
+            console.log(originalProfile.name);
             finalizeChanges(changes, originalProfile.name);
         }
     } else {
@@ -239,9 +242,15 @@
             reader.onload = function (event) {
                 const newProfile = { name, breed, weight, gender, picture: event.target.result };
                 dogProfiles.push(newProfile);
-                notifications.push(`You added a new profile for ${name}.`);
+                console.log("New profile = ", newProfile);
+                const novaNotificação = {
+                    title: "Perfil Criado",
+                    message:`You added a new profile for ${name}.`
+                }
+                notifications.push(novaNotificação);
                 localStorage.setItem('dogProfiles', JSON.stringify(dogProfiles));
                 localStorage.setItem('notifications', JSON.stringify(notifications));
+                console.log(JSON.parse(localStorage.getItem("notifications")));
                 loadDogProfiles();
             };
             reader.readAsDataURL(pictureInput.files[0]);
@@ -252,12 +261,18 @@
 
     // Function to handle finalizing changes
     function finalizeChanges(changes, profileName) {
+        
         if (changes.length) {
             notificationMessage = `You updated the profile of ${profileName}, changing ${changes.join(', ')}.`;
         } else {
+            
             notificationMessage = `No changes were made to the profile of ${profileName}.`;
         }
-        notifications.push(notificationMessage);
+        const novaNotificação = {
+                    title: "Perfil Alterado",
+                    message: notificationMessage
+                }
+        notifications.push(novaNotificação);
         localStorage.setItem('dogProfiles', JSON.stringify(dogProfiles));
         localStorage.setItem('notifications', JSON.stringify(notifications));
         loadDogProfiles();
