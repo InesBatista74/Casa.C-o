@@ -12,17 +12,17 @@
             background-color: lightblue;
             text-align: center;
         }
-
+    
         .top-image-container {
             position: relative;
         }
-
+    
         .top-image {
             width: 100%;
             max-height: 400px;
             object-fit: cover;
         }
-
+    
         .logo-top {
             position: absolute;
             top: 10px;
@@ -30,7 +30,7 @@
             width: 80px;
             z-index: 10;
         }
-
+    
         .container {
             width: 100%;
             display: flex;
@@ -40,28 +40,28 @@
             background-color: lightblue;
             padding-top: 20px;
         }
-
+    
         .header {
             font-size: 24px;
             font-weight: bold;
             color: #333;
             margin-bottom: 20px;
         }
-
+    
         .form {
             background-color: white;
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
         }
-
+    
         .form label {
             display: block;
             margin-bottom: 10px;
             color: #333;
             font-size: 14px;
         }
-
+    
         .form input {
             width: calc(100% - 20px);
             padding: 10px;
@@ -70,11 +70,11 @@
             border-radius: 5px;
             font-size: 14px;
         }
-
+    
         .form .password-container {
             position: relative;
         }
-
+    
         .form .password-container input {
             width: calc(100% - 20px);
             padding: 10px;
@@ -82,7 +82,7 @@
             border-radius: 5px;
             font-size: 14px;
         }
-
+    
         .form button {
             width: 100%;
             padding: 10px;
@@ -93,33 +93,33 @@
             cursor: pointer;
             font-size: 16px;
         }
-
+    
         .form button:hover {
             background-color: #5CA2DB;
         }
-
+    
         .register {
             margin-top: 10px;
             font-size: 14px;
             color: #333;
         }
-
+    
         .register a {
             color: #5CA2DB;
             text-decoration: none;
             font-weight: bold;
         }
-
+    
         .register a:hover {
             text-decoration: underline;
         }
-
+    
         .footer {
             margin-top: 20px;
             font-size: 12px;
             color: #333;
         }
-
+    
     </style>
 </head>
 <body>
@@ -130,7 +130,7 @@
     <div class="container">
         <div class="header">Faz login e continua a cuidar do teu melhor amigo!</div>
         <div class="form">
-            <form action="#" method="post">
+            <form id="loginForm">
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" placeholder="Digite seu email" required>
                 
@@ -139,7 +139,7 @@
                     <input type="password" id="password" name="password" placeholder="Digite sua senha" required>
                 </div>
 
-                <button type="button" onclick="login()">Entrar</button>
+                <button type="submit">Entrar</button>
             </form>
         </div>
         <div class="register">Não tens conta? <a href="registo.html">Regista-te!</a></div>
@@ -153,13 +153,15 @@
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
-            // Validate credentials
+            // Verificar credenciais no localStorage
             const users = JSON.parse(localStorage.getItem('users')) || [];
             const user = users.find(user => user.email === email && user.password === password);
 
             if (user) {
+                // Armazenar dados do usuário após login
+                localStorage.setItem('loggedInUser', JSON.stringify(user));
                 alert("Login bem-sucedido!");
-                window.location.href = 'homepage.html';
+                window.location.href = 'homepage.html';  // Redireciona para a homepage após login
             } else {
                 alert("Email ou senha inválidos!");
             }
