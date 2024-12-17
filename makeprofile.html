@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dog Details Form</title>
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
@@ -27,37 +29,38 @@
             <a class="navbar-brand" href="homepage.html">
                 <img src="logo.png" alt="Logo" id="logo" class="img-fluid" style="max-width: 50px; height: auto;">
             </a>
-            <a class="nav-link" href="notifications.html" data-bs-toggle="tooltip" title="Notifications">
+            <a class="nav-link" href="notifications.html" data-bs-toggle="tooltip" title="Notificações">
                 <i class="fas fa-bell"></i>
             </a>
             <div class="dropdown ms-auto">
                 <button class="btn btn-light dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fas fa-user" style="font-size: 30px;"></i>
+                    <!-- Profile picture here -->
+                    <img id="dropdownProfilePicture" src="default-profile.jpg" alt="Foto de Perfil" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;">
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                    <li><a class="dropdown-item" href="#">Profile 1</a></li>
-                    <li><a class="dropdown-item" href="#">Profile 2</a></li>
-                    <li><a class="dropdown-item" href="#">Profile 3</a></li>
-                    <li><a class="dropdown-item" href="create-profile.html">Create New Profile</a></li>
-                    <li><a class="dropdown-item" href="edit-profile.html">Edit Profile</a></li>
+                    <li><a class="dropdown-item" href="viewprofile.html">Ver Perfil</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
+    <!-- Form Content -->
     <div class="container mt-5">
         <h1 class="text-center">Vamos criar um perfil para o teu melhor amigo!</h1>
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <form id="dogDetailsForm">
+                    <!-- Upload Picture -->
                     <div class="mb-3">
                         <label for="dogPicture" class="form-label">Upload Dog Picture</label>
                         <input class="form-control" type="file" id="dogPicture" accept="image/*">
                     </div>
+                    <!-- Dog Name -->
                     <div class="mb-3">
                         <label for="dogName" class="form-label">Dog's Name</label>
                         <input type="text" class="form-control" id="dogName" placeholder="Insere o nome do teu cão" required>
                     </div>
+                    <!-- Dog Breed -->
                     <div class="mb-3">
                         <label for="dogBreed" class="form-label">Dog's Breed</label>
                         <select class="form-select" id="dogBreed" required>
@@ -74,10 +77,12 @@
                             <option value="Dachshund">Dachshund</option>
                         </select>
                     </div>
+                    <!-- Dog Weight -->
                     <div class="mb-3">
                         <label for="dogWeight" class="form-label">Dog's Weight (kg)</label>
                         <input type="number" class="form-control" id="dogWeight" placeholder="Insere o peso do teu cão" required min="1">
                     </div>
+                    <!-- Dog Gender -->
                     <div class="mb-3">
                         <label for="dogGender" class="form-label">Dog's Gender</label>
                         <select class="form-select" id="dogGender" required>
@@ -86,18 +91,22 @@
                             <option value="Female">Female</option>
                         </select>
                     </div>
+                    <!-- Submit Button -->
                     <button type="submit" class="btn btn-primary w-100">Submit Details</button>
                 </form>
             </div>
         </div>
 
+        <!-- Display Saved Dog Profiles -->
         <div class="dog-details">
             <h2 class="text-center mt-5">Dog Profiles</h2>
             <div id="dogProfiles" class="row">
+                <!-- Dog profiles will be dynamically rendered here -->
             </div>
         </div>
     </div>
 
+    <!-- Delete Confirmation Modal -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -116,14 +125,23 @@
         </div>
     </div>
 
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Load profile picture from localStorage and update navbar
+        window.onload = function() {
+            const profilePicture = localStorage.getItem('profilePicture');
+            if (profilePicture) {
+                document.getElementById('dropdownProfilePicture').src = profilePicture;
+            }
+        };
+
         const dogProfilesContainer = document.getElementById('dogProfiles');
         let dogProfiles = JSON.parse(localStorage.getItem('dogProfiles')) || [];
         let notifications = JSON.parse(localStorage.getItem('notifications')) || [];
-        let profileToEditIndex = null; 
+        let profileToEditIndex = null;
         let profileToDeleteIndex = null;
-    
+
         function loadDogProfiles() {
             dogProfilesContainer.innerHTML = '';
             dogProfiles.forEach((profile, index) => {
@@ -145,24 +163,40 @@
                 dogProfilesContainer.appendChild(dogCard);
             });
         }
-    
+
         function confirmDeleteProfile(index) {
             profileToDeleteIndex = index;
         }
-    
+
         document.getElementById('confirmDeleteButton').addEventListener('click', () => {
             if (profileToDeleteIndex !== null) {
                 const deletedProfile = dogProfiles[profileToDeleteIndex].name;
+                
+                // Remove the profile from the array
                 dogProfiles.splice(profileToDeleteIndex, 1);
-                notifications.push({ title: 'Profile Deleted', message: `You deleted the profile of ${deletedProfile}.` });
+                
+                // Create a notification object
+                const deletionNotification = {
+                    title: "Perfil Eliminado",
+                    message: `You deleted the profile of ${deletedProfile}.`
+                };
+                
+                // Add the notification to the notifications array
+                notifications.push(deletionNotification);
+                
+                // Update localStorage
                 localStorage.setItem('dogProfiles', JSON.stringify(dogProfiles));
                 localStorage.setItem('notifications', JSON.stringify(notifications));
+                
+                // Reload the profiles display
                 loadDogProfiles();
+                
+                // Reset the index and close the modal
                 profileToDeleteIndex = null;
                 bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
             }
         });
-    
+
         function editDogProfile(index) {
             const profile = dogProfiles[index];
             document.getElementById('dogName').value = profile.name;
@@ -171,7 +205,7 @@
             document.getElementById('dogGender').value = profile.gender;
             profileToEditIndex = index;
         }
-    
+
         document.getElementById('dogDetailsForm').addEventListener('submit', function (e) {
             e.preventDefault();
 
@@ -181,9 +215,8 @@
             const gender = document.getElementById('dogGender').value;
             const pictureInput = document.getElementById('dogPicture');
 
-            let notificationMessage = '';
-
             if (profileToEditIndex !== null) {
+                // Editing an existing profile
                 const originalProfile = dogProfiles[profileToEditIndex];
                 const changes = [];
 
@@ -219,33 +252,49 @@
                     finalizeChanges(changes, originalProfile.name);
                 }
             } else {
+                // Adding a new profile
                 if (pictureInput.files.length) {
                     const reader = new FileReader();
                     reader.onload = function (event) {
                         const newProfile = { name, breed, weight, gender, picture: event.target.result };
                         dogProfiles.push(newProfile);
-                        notifications.push({ title: 'New Profile Added', message: `You added a new profile for ${name}.` });
-                        localStorage.setItem('dogProfiles', JSON.stringify(dogProfiles));
-                        localStorage.setItem('notifications', JSON.stringify(notifications));
-                        loadDogProfiles();
+                        saveProfileChanges(newProfile, 'added');
                     };
                     reader.readAsDataURL(pictureInput.files[0]);
                 }
             }
 
             function finalizeChanges(changes, profileName) {
-                if (changes.length) {
-                    notifications.push({ title: 'Profile Updated', message: `You updated the profile for ${profileName}. Changes: ${changes.join(', ')}` });
+                if (changes.length > 0) {
+                    const editedNotification = {
+                        title: "Perfil Editado",
+                        message: `You updated the profile of ${profileName}. Changes: ${changes.join(", ")}`
+                    };
+                    notifications.push(editedNotification);
+
                     localStorage.setItem('dogProfiles', JSON.stringify(dogProfiles));
                     localStorage.setItem('notifications', JSON.stringify(notifications));
                     loadDogProfiles();
                 }
+                profileToEditIndex = null;
             }
 
-            profileToEditIndex = null;
-            this.reset();
+            function saveProfileChanges(profile, action) {
+                const actionMessage = action === 'added' ? 'added' : 'edited';
+                const profileMessage = `${actionMessage} the profile of ${profile.name}.`;
+
+                const actionNotification = {
+                    title: `Perfil ${actionMessage}`,
+                    message: `You ${profileMessage}`
+                };
+                notifications.push(actionNotification);
+
+                localStorage.setItem('dogProfiles', JSON.stringify(dogProfiles));
+                localStorage.setItem('notifications', JSON.stringify(notifications));
+                loadDogProfiles();
+            }
         });
-    
+
         loadDogProfiles();
     </script>
 </body>
