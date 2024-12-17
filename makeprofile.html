@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dog Details Form</title>
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
@@ -45,19 +47,23 @@
         </div>
     </nav>
 
+    <!-- Form Content -->
     <div class="container mt-5">
         <h1 class="text-center">Vamos criar um perfil para o teu melhor amigo!</h1>
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <form id="dogDetailsForm">
+                    <!-- Upload Picture -->
                     <div class="mb-3">
                         <label for="dogPicture" class="form-label">Upload Dog Picture</label>
                         <input class="form-control" type="file" id="dogPicture" accept="image/*">
                     </div>
+                    <!-- Dog Name -->
                     <div class="mb-3">
                         <label for="dogName" class="form-label">Dog's Name</label>
                         <input type="text" class="form-control" id="dogName" placeholder="Insere o nome do teu cão" required>
                     </div>
+                    <!-- Dog Breed -->
                     <div class="mb-3">
                         <label for="dogBreed" class="form-label">Dog's Breed</label>
                         <select class="form-select" id="dogBreed" required>
@@ -74,10 +80,12 @@
                             <option value="Dachshund">Dachshund</option>
                         </select>
                     </div>
+                    <!-- Dog Weight -->
                     <div class="mb-3">
                         <label for="dogWeight" class="form-label">Dog's Weight (kg)</label>
                         <input type="number" class="form-control" id="dogWeight" placeholder="Insere o peso do teu cão" required min="1">
                     </div>
+                    <!-- Dog Gender -->
                     <div class="mb-3">
                         <label for="dogGender" class="form-label">Dog's Gender</label>
                         <select class="form-select" id="dogGender" required>
@@ -86,18 +94,22 @@
                             <option value="Female">Female</option>
                         </select>
                     </div>
+                    <!-- Submit Button -->
                     <button type="submit" class="btn btn-primary w-100">Submit Details</button>
                 </form>
             </div>
         </div>
 
+        <!-- Display Saved Dog Profiles -->
         <div class="dog-details">
             <h2 class="text-center mt-5">Dog Profiles</h2>
             <div id="dogProfiles" class="row">
+                <!-- Dog profiles will be dynamically rendered here -->
             </div>
         </div>
     </div>
 
+    <!-- Delete Confirmation Modal -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -116,6 +128,7 @@
         </div>
     </div>
 
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const dogProfilesContainer = document.getElementById('dogProfiles');
@@ -154,7 +167,7 @@
             if (profileToDeleteIndex !== null) {
                 const deletedProfile = dogProfiles[profileToDeleteIndex].name;
                 dogProfiles.splice(profileToDeleteIndex, 1);
-                notifications.push({ title: 'Profile Deleted', message: `You deleted the profile of ${deletedProfile}.` });
+                notifications.push(`You deleted the profile of ${deletedProfile}.`);
                 localStorage.setItem('dogProfiles', JSON.stringify(dogProfiles));
                 localStorage.setItem('notifications', JSON.stringify(notifications));
                 loadDogProfiles();
@@ -173,80 +186,95 @@
         }
     
         document.getElementById('dogDetailsForm').addEventListener('submit', function (e) {
-            e.preventDefault();
+    e.preventDefault();
 
-            const name = document.getElementById('dogName').value.trim();
-            const breed = document.getElementById('dogBreed').value;
-            const weight = document.getElementById('dogWeight').value;
-            const gender = document.getElementById('dogGender').value;
-            const pictureInput = document.getElementById('dogPicture');
+    const name = document.getElementById('dogName').value.trim();
+    const breed = document.getElementById('dogBreed').value;
+    const weight = document.getElementById('dogWeight').value;
+    const gender = document.getElementById('dogGender').value;
+    const pictureInput = document.getElementById('dogPicture');
 
-            let notificationMessage = '';
+    let notificationMessage = '';
 
-            if (profileToEditIndex !== null) {
-                const originalProfile = dogProfiles[profileToEditIndex];
-                const changes = [];
+    if (profileToEditIndex !== null) {
+        // Editing an existing profile
+        const originalProfile = dogProfiles[profileToEditIndex];
+        const changes = [];
 
-                if (originalProfile.name !== name) {
-                    changes.push(`name from "${originalProfile.name}" to "${name}"`);
-                    originalProfile.name = name;
-                }
-                if (originalProfile.breed !== breed) {
-                    changes.push(`breed from "${originalProfile.breed}" to "${breed}"`);
-                    originalProfile.breed = breed;
-                }
-                if (originalProfile.weight !== weight) {
-                    changes.push(`weight from "${originalProfile.weight}" kg to "${weight}" kg`);
-                    originalProfile.weight = weight;
-                }
-                if (originalProfile.gender !== gender) {
-                    changes.push(`gender from "${originalProfile.gender}" to "${gender}"`);
-                    originalProfile.gender = gender;
-                }
+        if (originalProfile.name !== name) {
+            changes.push(`name from "${originalProfile.name}" to "${name}"`);
+            originalProfile.name = name;
+        }
+        if (originalProfile.breed !== breed) {
+            changes.push(`breed from "${originalProfile.breed}" to "${breed}"`);
+            originalProfile.breed = breed;
+        }
+        if (originalProfile.weight !== weight) {
+            changes.push(`weight from "${originalProfile.weight}" kg to "${weight}" kg`);
+            originalProfile.weight = weight;
+        }
+        if (originalProfile.gender !== gender) {
+            changes.push(`gender from "${originalProfile.gender}" to "${gender}"`);
+            originalProfile.gender = gender;
+        }
 
-                if (pictureInput.files.length) {
-                    const reader = new FileReader();
-                    reader.onload = function (event) {
-                        const newPicture = event.target.result;
-                        if (originalProfile.picture !== newPicture) {
-                            changes.push(`picture updated`);
-                            originalProfile.picture = newPicture;
-                        }
-                        finalizeChanges(changes, originalProfile.name);
-                    };
-                    reader.readAsDataURL(pictureInput.files[0]);
-                } else {
-                    finalizeChanges(changes, originalProfile.name);
+        if (pictureInput.files.length) {
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                const newPicture = event.target.result;
+                if (originalProfile.picture !== newPicture) {
+                    changes.push(`picture updated`);
+                    originalProfile.picture = newPicture;
                 }
-            } else {
-                if (pictureInput.files.length) {
-                    const reader = new FileReader();
-                    reader.onload = function (event) {
-                        const newProfile = { name, breed, weight, gender, picture: event.target.result };
-                        dogProfiles.push(newProfile);
-                        notifications.push({ title: 'New Profile Added', message: `You added a new profile for ${name}.` });
-                        localStorage.setItem('dogProfiles', JSON.stringify(dogProfiles));
-                        localStorage.setItem('notifications', JSON.stringify(notifications));
-                        loadDogProfiles();
-                    };
-                    reader.readAsDataURL(pictureInput.files[0]);
-                }
-            }
+                finalizeChanges(changes, originalProfile.name);
+            };
+            reader.readAsDataURL(pictureInput.files[0]);
+        } else {
+            finalizeChanges(changes, originalProfile.name);
+        }
+    } else {
+        // Adding a new profile
+        if (pictureInput.files.length) {
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                const newProfile = { name, breed, weight, gender, picture: event.target.result };
+                dogProfiles.push(newProfile);
+                notifications.push(`You added a new profile for ${name}.`);
+                localStorage.setItem('dogProfiles', JSON.stringify(dogProfiles));
+                localStorage.setItem('notifications', JSON.stringify(notifications));
+                loadDogProfiles();
+            };
+            reader.readAsDataURL(pictureInput.files[0]);
+        } else {
+            alert('Please upload a picture!');
+        }
+    }
 
-            function finalizeChanges(changes, profileName) {
-                if (changes.length) {
-                    notifications.push({ title: 'Profile Updated', message: `You updated the profile for ${profileName}. Changes: ${changes.join(', ')}` });
-                    localStorage.setItem('dogProfiles', JSON.stringify(dogProfiles));
-                    localStorage.setItem('notifications', JSON.stringify(notifications));
-                    loadDogProfiles();
-                }
-            }
+    // Function to handle finalizing changes
+    function finalizeChanges(changes, profileName) {
+        if (changes.length) {
+            notificationMessage = `You updated the profile of ${profileName}, changing ${changes.join(', ')}.`;
+        } else {
+            notificationMessage = `No changes were made to the profile of ${profileName}.`;
+        }
+        notifications.push(notificationMessage);
+        localStorage.setItem('dogProfiles', JSON.stringify(dogProfiles));
+        localStorage.setItem('notifications', JSON.stringify(notifications));
+        loadDogProfiles();
+        profileToEditIndex = null;
+        document.getElementById('dogDetailsForm').reset();
+    }
+});
 
-            profileToEditIndex = null;
-            this.reset();
-        });
+    
+            localStorage.setItem('dogProfiles', JSON.stringify(dogProfiles));
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+            loadDogProfiles();
+            document.getElementById('dogDetailsForm').reset();
+
     
         loadDogProfiles();
     </script>
+    
 </body>
 </html>
