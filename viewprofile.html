@@ -62,7 +62,7 @@
           </div>
           <div class="mb-3">
             <label for="userName" class="form-label">Nome</label>
-            <input type="text" class="form-control" id="userName" readonly>
+            <input type="text" class="form-control" id="userName">
           </div>
           <div class="mb-3">
             <label for="userContact" class="form-label">Contato</label>
@@ -92,7 +92,7 @@
       if (loggedInUser) {
         // Preencher os campos com os dados do usuário
         document.getElementById('userEmail').value = loggedInUser.email;
-        document.getElementById('userName').value = loggedInUser.name;
+        document.getElementById('userName').value = loggedInUser.name;  // Editable field for name
         document.getElementById('userContact').value = loggedInUser.contact;
         document.getElementById('userAddress').value = loggedInUser.address;
 
@@ -122,8 +122,19 @@
     }
 
     function saveProfile() {
-      alert("Perfil salvo com sucesso!");
-      // Aqui você pode adicionar lógica para salvar dados alterados (se houver)
+      const newName = document.getElementById('userName').value;
+      if (newName) {
+        const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+        loggedInUser.name = newName; // Update the name in the user data
+        localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser)); // Save updated user info back to localStorage
+        alert("Perfil salvo com sucesso!");
+
+        // Optionally, update the homepage immediately
+        localStorage.setItem('userName', newName);  // Optionally store the name separately for easy access
+        window.location.href = 'homepage.html'; // Redirect to homepage to show updated name
+      } else {
+        alert("O nome não pode estar vazio.");
+      }
     }
   </script>
 </body>

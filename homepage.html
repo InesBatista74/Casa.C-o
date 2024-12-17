@@ -163,12 +163,29 @@
   <script>
     // Load user data from localStorage
     window.onload = function () {
-      const userName = localStorage.getItem('userName') || 'Usuário';
-      const profilePicture = localStorage.getItem('profilePicture') || 'default-profile.jpg';
+      const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+      
+      // Check if the user is logged in
+      if (loggedInUser) {
+        const userName = loggedInUser.name || 'Usuário';
+        const profilePicture = loggedInUser.profilePicture || 'default-profile.jpg';
 
-      document.getElementById('welcomeName').textContent = userName;
-      document.getElementById('dropdownProfilePicture').src = profilePicture;
+        // Personalize the homepage
+        document.getElementById('welcomeName').textContent = userName;
+        document.getElementById('dropdownProfilePicture').src = profilePicture;
+      } else {
+        // If no user is logged in, redirect to login page
+        window.location.href = 'inicio.html';
+      }
     };
+    window.onload = function () {
+  const userName = localStorage.getItem('userName') || 'Usuário'; // Retrieve updated name from localStorage
+  const profilePicture = localStorage.getItem('profilePicture') || 'default-profile.jpg';
+
+  document.getElementById('welcomeName').textContent = userName;
+  document.getElementById('dropdownProfilePicture').src = profilePicture;
+};
+
   </script>
 </body>
 </html>
