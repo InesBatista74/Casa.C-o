@@ -18,21 +18,16 @@
             <a class="navbar-brand" href="homepage.html">
                 <img src="logo.png" alt="Logo" id="logo" class="img-fluid" style="max-width: 50px; height: auto;">
             </a>
-
-            <a class="nav-link" href="notifications.html" data-bs-toggle="tooltip" title="Notifications">
+            <a class="nav-link" href="notifications.html" data-bs-toggle="tooltip" title="Notificações">
                 <i class="fas fa-bell"></i>
             </a>
-
             <div class="dropdown ms-auto">
                 <button class="btn btn-light dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fas fa-user" style="font-size: 30px;"></i>
+                    <!-- Profile picture here -->
+                    <img id="dropdownProfilePicture" src="default-profile.jpg" alt="Foto de Perfil" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;">
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                    <li><a class="dropdown-item" href="#">Profile 1</a></li>
-                    <li><a class="dropdown-item" href="#">Profile 2</a></li>
-                    <li><a class="dropdown-item" href="#">Profile 3</a></li>
-                    <li><a class="dropdown-item" href="create-profile.html">Create New Profile</a></li>
-                    <li><a class="dropdown-item" href="edit-profile.html">Edit Profile</a></li>
+                    <li><a class="dropdown-item" href="viewprofile.html">Ver Perfil</a></li>
                 </ul>
             </div>
         </div>
@@ -222,10 +217,23 @@
           <p>&copy; 2024 Casa do Cão. Todos os direitos reservados.</p>
         </div>
     </footer>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.3/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.5.1/knockout-latest.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
     <script src="shop.js"></script>
     <script src="https://getbootstrap.com/docs/5.2/assets/js/validate-forms.js"></script>
+    <script>
+          // Load user's profile picture if available in localStorage
+  const profilePicElement = document.getElementById('dropdownProfilePicture');
+  const userProfilePic = localStorage.getItem('profilePicture');
+
+  if (userProfilePic) {
+    profilePicElement.src = userProfilePic; // Set the profile picture in navbar
+  } else {
+    // Fallback to default profile picture if not set
+    profilePicElement.src = 'default-profile.jpg';
+  }
+    </script>
 </body>
 </html>
