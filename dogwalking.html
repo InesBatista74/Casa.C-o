@@ -1,25 +1,87 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Professional Dog Walker</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/knockout@3.5.1/build/knockout.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css" />
     <style>
         #map {
-            height: 300px;
+            height: 400px;
             width: 100%;
             margin-top: 20px;
+            border-radius: 10px;
         }
+
+        .tutor-card {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .tutor-card img {
+            width: 60%;
+            height: 200px; /* Ajustado para garantir que a imagem se ajuste */
+            object-fit: cover;
+        }
+
+        .tutor-card h5 {
+            margin: 15px 0;
+        }
+
+        .star-rating {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .star-rating i {
+            font-size: 1.5em;
+            color: #FFD700;
+            cursor: pointer;
+        }
+
+        .tutor-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .tutor-list-item {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tutor-list-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        .tutor-list-item .info {
+            flex-grow: 1;
+        }
+
+        .tutor-list-item .actions {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .tutor-list-item .actions button {
+            margin-top: 5px;
+        }
+
     </style>
 </head>
 <body>
@@ -29,131 +91,205 @@
             <a class="navbar-brand" href="homepage.html">
                 <img src="logo.png" alt="Logo" id="logo" class="img-fluid" style="max-width: 50px; height: auto;">
             </a>
-
             <a class="nav-link" href="notifications.html" data-bs-toggle="tooltip" title="Notifications">
                 <i class="fas fa-bell"></i>
             </a>
-
-            <div class="dropdown ms-auto">
-                <button class="btn btn-light dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fas fa-user" style="font-size: 30px;"></i>
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                    <li><a class="dropdown-item" href="#">Profile 1</a></li>
-                    <li><a class="dropdown-item" href="#">Profile 2</a></li>
-                    <li><a class="dropdown-item" href="#">Profile 3</a></li>
-                    <li><a class="dropdown-item" href="viewprofile.html">Create New Profile</a></li>
-                </ul>
-            </div>
         </div>
     </nav>
 
-    <div id="dogWalkerApp" class="container mt-4">
-        <h1 class="mb-4">Book a Professional Dog Walker</h1>
-
-        <!-- Step 1: Choose Dog Walker -->
-        <div data-bind="visible: currentStep() === 1" class="mb-4">
-            <h2>Step 1: Choose a Dog Walker</h2>
-            <div class="list-group" data-bind="foreach: dogWalkers">
-                <label class="list-group-item d-flex justify-content-between align-items-center">
-                    <span>
-                        <span data-bind="text: name"></span> - 
-                        <span data-bind="text: availability"></span>
-                    </span>
-                    <input class="form-check-input" type="radio" name="dogWalker" data-bind="value: $data, checked: selectedDogWalker">
-                </label>
-            </div>
-            <button class="btn btn-primary mt-3" data-bind="click: nextStep, enable: selectedDogWalker">Next</button>
+    <!-- Passo 1: Lista de tutores -->
+    <div class="container mt-4" id="step1">
+        <h3>Selecione um Passeador de Cães</h3>
+        
+        <!-- Botões de alternância de visualização -->
+        <div class="d-flex justify-content-between mb-3">
+            <button class="btn btn-outline-primary" id="viewCardsBtn">Exibir como Cartões</button>
+            <button class="btn btn-outline-primary" id="viewListBtn">Exibir como Lista</button>
         </div>
 
-        <!-- Step 2: Choose Date -->
-        <div data-bind="visible: currentStep() === 2" class="mb-4">
-            <h2>Step 2: Choose a Date</h2>
-            <div class="mb-3" data-bind="foreach: availableDates">
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="appointmentDate" data-bind="value: $data, checked: selectedDate">
-                    <label class="form-check-label" data-bind="text: $data"></label>
+        <div class="row" id="tutorCardList"></div>
+        <ul id="tutorList" class="tutor-list" style="display: none;"></ul>
+    </div>
+
+    <!-- Passo 2: Agendar passeio -->
+    <div class="container mt-4" id="step2" style="display: none;">
+        <h3>Agendar Passeio com <span id="selectedTutorName"></span></h3>
+        <form>
+            <div class="mb-3">
+                <label for="scheduleDate" class="form-label">Data</label>
+                <input type="date" class="form-control" id="scheduleDate" required>
+            </div>
+            <div class="mb-3">
+                <label for="scheduleTime" class="form-label">Hora</label>
+                <input type="time" class="form-control" id="scheduleTime" required>
+            </div>
+            <button type="button" class="btn btn-success" id="scheduleBtn">Agendar Passeio</button>
+        </form>
+        <button class="btn btn-secondary mt-3" id="backBtn">Voltar</button>
+    </div>
+
+    <!-- Mapa -->
+    <div class="container mt-4">
+        <div id="map"></div>
+    </div>
+
+    <!-- Modal de Detalhes do Tutor -->
+    <div class="modal fade" id="tutorDetailsModal" tabindex="-1" aria-labelledby="tutorDetailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="tutorDetailsModalLabel">Detalhes do Tutor</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="tutorAge"></p>
+                    <p id="tutorExperience"></p>
+                    <p id="tutorPhone"></p>
                 </div>
             </div>
-            <button class="btn btn-secondary me-2" data-bind="click: prevStep">Back</button>
-            <button class="btn btn-primary" data-bind="click: nextStep, enable: selectedDate">Next</button>
-        </div>
-
-        <!-- Step 3: Confirm Booking -->
-        <div data-bind="visible: currentStep() === 3" class="mb-4">
-            <h2>Booking Confirmed!</h2>
-            <p>Thank you for booking a dog walker.</p>
-            <p><strong>Walker:</strong> <span data-bind="text: selectedDogWalker() ? selectedDogWalker().name : ''"></span></p>
-            <p><strong>Date:</strong> <span data-bind="text: selectedDate"></span></p>
-            <h3>Walker's Current Location</h3>
-            <div id="map"></div>
-            <button class="btn btn-primary mt-3" data-bind="click: resetBooking">Book Another Walker</button>
         </div>
     </div>
 
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        function DogWalkerViewModel() {
-            var self = this;
+        let map, selectedTutor = null;
 
-            // Step management
-            self.currentStep = ko.observable(1);
+        // Lista de tutores com imagens e localização, incluindo novos dados como idade, experiência e telefone
+        const tutors = [
+            { name: "Malaquias", lat: 40.64427, lng: -8.64554, distance: "200m", image: "https://media.gq.com/photos/55cc91c7fb580c9d7655f247/1:1/w_445,h_445,c_limit/Screen%20Shot%202015-08-13%20at%208.16.22%20AM.png", age: 28, experience: "5 anos", phone: "+351 912 345 678" },
+            { name: "Laura", lat: 40.64368, lng: -8.65110, distance: "350m", image: "https://p2.trrsf.com/image/fget/cf/774/0/images.terra.com/2024/04/15/1008100064-tutora-e-cao.jpg", age: 32, experience: "7 anos", phone: "+351 987 654 321" },
+            { name: "Zendaya", lat: 40.64055, lng: -8.65315, distance: "500m", image: "https://i.pinimg.com/originals/6b/16/67/6b166786571e033a713b31f9c47f450c.png", age: 26, experience: "3 anos", phone: "+351 963 852 741" }
+        ];
 
-            // Dog walkers and their availability
-            self.dogWalkers = ko.observableArray([
-                { name: "John Doe", availability: "Available", location: [40.7128, -74.0060] },
-                { name: "Jane Smith", availability: "Unavailable", location: [34.0522, -118.2437] },
-                { name: "Mike Johnson", availability: "Available", location: [37.7749, -122.4194] }
-            ]);
+        // Inicializa o Leaflet Map com um mapa mais bonito de Aveiro
+        function initMap() {
+            map = L.map('map').setView([40.64427, -8.64554], 14);
 
-            // Dates available for booking
-            self.availableDates = ko.observableArray(["2024-12-20", "2024-12-21", "2024-12-22"]);
+            // Camada de mapa estilizada de Aveiro, Portugal
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors',
+                maxZoom: 19
+            }).addTo(map);
 
-            // Selected values
-            self.selectedDogWalker = ko.observable();
-            self.selectedDate = ko.observable();
-
-            // Navigation functions
-            self.nextStep = function () {
-                if (self.currentStep() < 3) {
-                    self.currentStep(self.currentStep() + 1);
-                    if (self.currentStep() === 3) {
-                        self.showMap();
-                    }
-                }
-            };
-
-            self.prevStep = function () {
-                if (self.currentStep() > 1) {
-                    self.currentStep(self.currentStep() - 1);
-                }
-            };
-
-            // Reset booking
-            self.resetBooking = function () {
-                self.selectedDogWalker(null);
-                self.selectedDate(null);
-                self.currentStep(1);
-            };
-
-            // Map display function
-            self.showMap = function () {
-                var walker = self.selectedDogWalker();
-                if (walker && walker.location) {
-                    var map = L.map('map').setView(walker.location, 13);
-                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        maxZoom: 19,
-                        attribution: '© OpenStreetMap contributors'
-                    }).addTo(map);
-
-                    L.marker(walker.location).addTo(map)
-                        .bindPopup(walker.name + " is here.")
-                        .openPopup();
-                }
-            };
+            loadTutorsOnMap();
         }
 
-        // Apply Knockout bindings
-        ko.applyBindings(new DogWalkerViewModel());
+        // Carrega tutores em cartões e no mapa
+        function loadTutorsOnMap() {
+            const cardListElement = document.getElementById("tutorCardList");
+            const listElement = document.getElementById("tutorList");
+
+            cardListElement.innerHTML = "";
+            listElement.innerHTML = "";
+
+            tutors.forEach((tutor, index) => {
+                // Adicionar marcador no mapa
+                L.marker([tutor.lat, tutor.lng]).addTo(map)
+                    .bindPopup(`<strong>${tutor.name}</strong><br>${tutor.distance}`);
+
+                // Adicionar cartão do tutor
+                const card = document.createElement("div");
+                card.className = "col-md-4";
+                card.innerHTML = `
+                    <div class="tutor-card">
+                        <img src="${tutor.image}" alt="${tutor.name}">
+                        <div class="p-3">
+                            <h5>${tutor.name}</h5>
+                            <p>Distância: ${tutor.distance}</p>
+                            <div class="star-rating">
+                                <i class="fas fa-star" onclick="rateTutor(${index}, 1)"></i>
+                                <i class="fas fa-star" onclick="rateTutor(${index}, 2)"></i>
+                                <i class="fas fa-star" onclick="rateTutor(${index}, 3)"></i>
+                                <i class="fas fa-star" onclick="rateTutor(${index}, 4)"></i>
+                                <i class="fas fa-star" onclick="rateTutor(${index}, 5)"></i>
+                            </div>
+                            <button class="btn btn-primary btn-sm" onclick="selectTutor(${index})">Selecionar</button>
+                            <button class="btn btn-info btn-sm mt-2" onclick="showTutorDetails(${index})">Ver Detalhes</button>
+                        </div>
+                    </div>
+                `;
+                cardListElement.appendChild(card);
+
+                // Adicionar item de lista do tutor
+                const listItem = document.createElement("li");
+                listItem.className = "tutor-list-item";
+                listItem.innerHTML = `
+                    <img src="${tutor.image}" alt="${tutor.name}">
+                    <div class="info">
+                        <h5>${tutor.name}</h5>
+                        <p>Distância: ${tutor.distance}</p>
+                    </div>
+                    <div class="actions">
+                        <button class="btn btn-primary btn-sm" onclick="selectTutor(${index})">Selecionar</button>
+                        <button class="btn btn-info btn-sm mt-2" onclick="showTutorDetails(${index})">Ver Detalhes</button>
+                    </div>
+                `;
+                listElement.appendChild(listItem);
+            });
+        }
+
+        // Avaliação de tutor (clicando nas estrelas)
+        function rateTutor(index, rating) {
+            alert(`Você avaliou ${tutors[index].name} com ${rating} estrelas.`);
+        }
+
+        // Exibir os detalhes do tutor no modal
+        function showTutorDetails(index) {
+            const tutor = tutors[index];
+            document.getElementById("tutorAge").innerText = `Idade: ${tutor.age} anos`;
+            document.getElementById("tutorExperience").innerText = `Experiência: ${tutor.experience}`;
+            document.getElementById("tutorPhone").innerText = `Telefone: ${tutor.phone}`;
+            new bootstrap.Modal(document.getElementById('tutorDetailsModal')).show();
+        }
+
+        // Seleciona um tutor
+        function selectTutor(index) {
+            selectedTutor = tutors[index];
+            document.getElementById("selectedTutorName").innerText = selectedTutor.name;
+
+            // Exibir passo 2 e esconder passo 1
+            document.getElementById("step1").style.display = "none";
+            document.getElementById("step2").style.display = "block";
+
+            // Centraliza o mapa no tutor selecionado
+            map.setView([selectedTutor.lat, selectedTutor.lng], 15);
+        }
+
+        // Botão "Voltar"
+        document.getElementById("backBtn").addEventListener("click", () => {
+            document.getElementById("step1").style.display = "block";
+            document.getElementById("step2").style.display = "none";
+        });
+
+        // Agendar passeio
+        document.getElementById("scheduleBtn").addEventListener("click", () => {
+            const date = document.getElementById("scheduleDate").value;
+            const time = document.getElementById("scheduleTime").value;
+
+            if (date && time) {
+                // Passar as informações para a URL da página de confirmação
+                const url = `confirmation.html?date=${date}&time=${time}&tutor=${selectedTutor.name}`;
+                window.location.href = url; // Redireciona para a página de confirmação
+            } else {
+                alert("Por favor, selecione uma data e hora.");
+            }
+        });
+
+        // Alternar entre visualização de cartões e lista
+        document.getElementById("viewCardsBtn").addEventListener("click", () => {
+            document.getElementById("tutorCardList").style.display = "flex";
+            document.getElementById("tutorList").style.display = "none";
+        });
+
+        document.getElementById("viewListBtn").addEventListener("click", () => {
+            document.getElementById("tutorCardList").style.display = "none";
+            document.getElementById("tutorList").style.display = "block";
+        });
+
+        // Inicializa o mapa após o carregamento da página
+        window.onload = initMap;
     </script>
 </body>
 </html>
