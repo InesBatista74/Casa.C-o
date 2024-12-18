@@ -91,9 +91,18 @@
             <a class="navbar-brand" href="homepage.html">
                 <img src="logo.png" alt="Logo" id="logo" class="img-fluid" style="max-width: 50px; height: auto;">
             </a>
-            <a class="nav-link" href="notifications.html" data-bs-toggle="tooltip" title="Notifications">
+            <a class="nav-link" href="notifications.html" data-bs-toggle="tooltip" title="Notificações">
                 <i class="fas fa-bell"></i>
             </a>
+            <div class="dropdown ms-auto">
+                <button class="btn btn-light dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <!-- Profile picture -->
+                    <img id="dropdownProfilePicture" src="default-profile.jpg" alt="Foto de Perfil" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;">
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                    <li><a class="dropdown-item" href="viewprofile.html">Ver Perfil</a></li>
+                </ul>
+            </div>
         </div>
     </nav>
 
@@ -114,7 +123,7 @@
     <!-- Passo 2: Agendar passeio -->
     <div class="container mt-4" id="step2" style="display: none;">
         <h3>Agendar Passeio com <span id="selectedTutorName"></span></h3>
-        <form>
+        <form id="scheduleForm">
             <div class="mb-3">
                 <label for="scheduleDate" class="form-label">Data</label>
                 <input type="date" class="form-control" id="scheduleDate" required>
@@ -126,6 +135,14 @@
             <button type="button" class="btn btn-success" id="scheduleBtn">Agendar Passeio</button>
         </form>
         <button class="btn btn-secondary mt-3" id="backBtn">Voltar</button>
+    </div>
+
+    <!-- Nova Div de Confirmação -->
+    <div class="container mt-4" id="successMessage" style="display: none;">
+        <div class="alert alert-success" role="alert">
+            Passeio agendado com sucesso!
+        </div>
+        <button class="btn btn-primary" onclick="goBackToStep1()">Voltar para a Seleção de Tutor</button>
     </div>
 
     <!-- Mapa -->
@@ -257,21 +274,30 @@
             map.setView([selectedTutor.lat, selectedTutor.lng], 15);
         }
 
+        // Função para voltar à tela inicial
+        function goBackToStep1() {
+            // Ocultar a mensagem de sucesso e mostrar a seleção de tutor
+            document.getElementById("successMessage").style.display = "none";
+            document.getElementById("step1").style.display = "block";
+        }
+
         // Botão "Voltar"
         document.getElementById("backBtn").addEventListener("click", () => {
             document.getElementById("step1").style.display = "block";
             document.getElementById("step2").style.display = "none";
         });
 
-        // Agendar passeio
+        // Agendar passeio com validação e mensagem de sucesso
         document.getElementById("scheduleBtn").addEventListener("click", () => {
             const date = document.getElementById("scheduleDate").value;
             const time = document.getElementById("scheduleTime").value;
 
             if (date && time) {
-                // Passar as informações para a URL da página de confirmação
-                const url = `confirmation.html?date=${date}&time=${time}&tutor=${selectedTutor.name}`;
-                window.location.href = url; // Redireciona para a página de confirmação
+                // Ocultar o passo 2 (formulário de agendamento)
+                document.getElementById("step2").style.display = "none";
+                
+                // Exibir mensagem de sucesso
+                document.getElementById("successMessage").style.display = "block";
             } else {
                 alert("Por favor, selecione uma data e hora.");
             }
@@ -288,8 +314,16 @@
             document.getElementById("tutorList").style.display = "block";
         });
 
-        // Inicializa o mapa após o carregamento da página
+        // Inicializar o mapa ao carregar a página
         window.onload = initMap;
+        // Update profile picture based on localStorage data
+        const profilePicture = localStorage.getItem('profilePicture');
+        const dropdownProfilePicture = document.getElementById('dropdownProfilePicture');
+
+        if (profilePicture) {
+            dropdownProfilePicture.src = profilePicture;
+        }
+
     </script>
 </body>
 </html>
