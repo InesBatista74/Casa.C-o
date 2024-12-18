@@ -166,11 +166,6 @@
             </div>
         </div>
     </div>
-    <footer class="bg-light py-3" style="margin-top: 25px;">
-        <div class="container text-center">
-          <p>&copy; 2024 Casa do Cão. Todos os direitos reservados.</p>
-        </div>
-    </footer>
 
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
@@ -294,19 +289,23 @@
 
         // Agendar passeio com validação e mensagem de sucesso
         document.getElementById("scheduleBtn").addEventListener("click", () => {
-            const date = document.getElementById("scheduleDate").value;
-            const time = document.getElementById("scheduleTime").value;
+    const date = document.getElementById("scheduleDate").value;
+    const time = document.getElementById("scheduleTime").value;
 
-            if (date && time) {
-                // Ocultar o passo 2 (formulário de agendamento)
-                document.getElementById("step2").style.display = "none";
-                
-                // Exibir mensagem de sucesso
-                document.getElementById("successMessage").style.display = "block";
-            } else {
-                alert("Por favor, selecione uma data e hora.");
-            }
-        });
+    if (date && time) {
+        // Call the storeNotification function to save the notification in localStorage
+        storeNotification();
+
+        // Hide the scheduling step
+        document.getElementById("step2").style.display = "none";
+
+        // Show success message
+        document.getElementById("successMessage").style.display = "block";
+    } else {
+        alert("Por favor, selecione uma data e hora.");
+    }
+});
+
 
         // Alternar entre visualização de cartões e lista
         document.getElementById("viewCardsBtn").addEventListener("click", () => {
@@ -328,6 +327,25 @@
         if (profilePicture) {
             dropdownProfilePicture.src = profilePicture;
         }
+
+        // Function to store notification after a successful dog walk booking
+function storeNotification() {
+    // Create a new notification
+    const notification = {
+        title: "Passeio Agendado!",
+        message: `Você agendou um passeio com ${selectedTutor.name} para o dia ${document.getElementById("scheduleDate").value} às ${document.getElementById("scheduleTime").value}.`
+    };
+
+    // Get existing notifications from localStorage or initialize an empty array
+    const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+
+    // Add the new notification to the array
+    notifications.push(notification);
+
+    // Store the updated notifications array back into localStorage
+    localStorage.setItem('notifications', JSON.stringify(notifications));
+}
+
 
     </script>
 </body>
