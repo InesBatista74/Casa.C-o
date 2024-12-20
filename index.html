@@ -148,33 +148,34 @@
 
     <script>
         document.getElementById('loginForm').addEventListener('submit', function (e) {
-            e.preventDefault();
+    e.preventDefault();
 
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
 
-            // Allow the professor account to bypass localStorage checks
-            if (email === 'professor@gmail.com' && password === 'professor') {
-                const professorUser = { email: 'professor@gmail.com', role: 'professor' }; // Example user object
-                localStorage.setItem('loggedInUser', JSON.stringify(professorUser));
-                alert("Login bem-sucedido como Professor!");
-                window.location.href = 'homepage.html';  // Redireciona para a homepage após login
-                return;
-            }
+    // Verificar se é o login do professor
+    if (email === 'professor@gmail.com' && password === 'professor') {
+        const professorUser = { email: 'professor@gmail.com', role: 'professor' }; // Exemplo de objeto de usuário
+        localStorage.setItem('loggedInUser', JSON.stringify(professorUser));
+        alert("Login bem-sucedido como Professor!");
+        window.location.href = 'homepage.html'; // Redireciona para a homepage após login
+        return;
+    }
 
-            // Verificar credenciais no localStorage
-            const users = JSON.parse(localStorage.getItem('users')) || [];
-            const user = users.find(user => user.email === email && user.password === password);
+    // Verificar credenciais no localStorage
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    const user = users.find(user => user.email === email && user.password === password);
 
-            if (user) {
-                // Armazenar dados do usuário após login
-                localStorage.setItem('loggedInUser', JSON.stringify(user));
-                alert("Login bem-sucedido!");
-                window.location.href = 'homepage.html';  // Redireciona para a homepage após login
-            } else {
-                alert("Email ou senha inválidos!");
-            }
-        });
+    if (user) {
+        // Armazenar dados do usuário após login
+        localStorage.setItem('loggedInUser', JSON.stringify(user));
+        alert("Login bem-sucedido!");
+        window.location.href = 'homepage.html'; // Redireciona para a homepage após login
+    } else {
+        alert("Email ou senha inválidos!");
+    }
+});
+
     </script>
 </body>
 </html>
